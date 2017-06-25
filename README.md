@@ -1,4 +1,4 @@
-# Response Spectra
+# Espectro respuesta
 Código en Matlab que calcula el espectro de respuesta a partir de un registro de aceleraciones.
 
 ## Modo de uso

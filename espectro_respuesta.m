@@ -1,7 +1,18 @@
 function [Sd, Sv, Sa, T, b, TTT] = espectro_respuesta(vg, Fs, plot)
-% Vg: señal terremoto (vector de aceleraciones)
-% Fs: muestras por segundo de muestreo
-if ~exist('plot','var'), plot=true; end
+% Crea el espectro de respuesta a partir de un registro de aceleraciones.
+%
+% Input:
+%   Vg: Señal terremoto (vector de aceleraciones)
+%   Fs: Número de muestras por segundo
+%
+% Output:
+%   Sd: Vector desplazamiento
+%   Sv: Vector de velocidad
+%   Sa: Vector de aceleración
+%   T: Vector período
+%   b: Amortiguamiento
+
+if ~exist('plot', 'var'), plot = true; end
 
 %% Se aplica corrección de linea base a la señal
 vg = detrend(vg);
@@ -10,7 +21,7 @@ vg = detrend(vg);
 dper = 0.01; % Delta de periodo
 T = 0.01:dper:10; % Vector de periodo
 % b = [0 2 5 10 20] / 100; % Razón de amortiguamiento
-b = 5/100; % Amortiguamiento del 5%
+b = 5 / 100; % Amortiguamiento del 5%
 
 %% Dimensiones
 nT = length(T);
@@ -28,10 +39,10 @@ TTT = zeros(nT, nb); % Tiempos de máxima aceleración para cada combinación amort
 for j = 1:nb
     for i = 1:nT
         [xm, vm, am] = respcacr(1, T(i), b(j), -vg, Fs, 0, 0); % Se obtiene desplazamiento, velocidad y aceleración
-        Sd(i, j) = max(abs(xm));        % Se guarda el máximo desplazamiento
-        Sv(i, j) = max(abs(vm));        % Se guarda la máxima velocidad
-        Sa(i, j) = max(abs(am + vg));   % Se guarda la máxima aceleración, suma movimiento de la base
-        TTT(i, j) = max_t(am, Fs);      % Tiempo asociado a la máxima aceleración
+        Sd(i, j) = max(abs(xm)); % Se guarda el máximo desplazamiento
+        Sv(i, j) = max(abs(vm)); % Se guarda la máxima velocidad
+        Sa(i, j) = max(abs(am+vg)); % Se guarda la máxima aceleración, suma movimiento de la base
+        TTT(i, j) = max_t(am, Fs); % Tiempo asociado a la máxima aceleración
     end
 end
 

@@ -39,12 +39,12 @@ else
 end
 
 % Ecuación de rigidez, k*
-kk = (4*m) / dt2 + 2 / dt * c + k;
+kk = (4 * m) / dt2 + 2 / dt * c + k;
 
 % Calcula la inversa
 ikk = inv(kk);
 
-ao = (P(1) - c * vo - k * xo) / m;  % Expresión de fuerza
+ao = (P(1) - c * vo - k * xo) / m; % Expresión de fuerza
 P = [P(2:np); P(np)]; % Elimina el primer elemento y repite el último
 
 dt24 = 4 / dt2;
@@ -56,13 +56,13 @@ dt12 = 2 / dt;
 kc = ikk * c;
 cdt12 = kc * 2 / dt;
 
-AA= [mdt24+cdt12            mdt14+ikk*c             km;
-    dt12*(mdt24+cdt12)-dt12 dt12*(mdt14+ikk*c)-1    dt12*km;
-    dt24*(mdt24+cdt12)-dt24 dt24*(mdt14+ikk*c)-dt14 dt24*km-1];
-BB= [ikk                    ikk*dt12                ikk*dt24].';
+AA = [mdt24 + cdt12, mdt14 + ikk * c, km; ...
+    dt12 * (mdt24 + cdt12) - dt12, dt12 * (mdt14 + ikk * c) - 1, dt12 * km; ...
+    dt24 * (mdt24 + cdt12) - dt24, dt24 * (mdt14 + ikk * c) - dt14, dt24 * km - 1];
+BB = [ikk, ikk * dt12, ikk * dt24].';
 
 % Computa el tiempo de respuesta de AAx[t] + BB*P[t]
-xx = ltitr(AA, BB, P, [xo vo ao].');
+xx = ltitr(AA, BB, P, [xo, vo, ao].');
 a = [xx(:, 3)]; %#ok<*NBRAK>
 v = [xx(:, 2)];
 x = [xx(:, 1)];

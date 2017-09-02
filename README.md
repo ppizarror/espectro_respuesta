@@ -28,8 +28,6 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | b | Amortiguamiento |
 
 ## Autor
-Pablo Pizarro, 2017.
-
-Si tienes alguna sugerencia envíame un correo a: [pablo.pizarro@ing.uchile.cl](mailto:pablo.pizarro@ing.uchile.cl), o sencillamente ten la libertad de enviar un _pull request_.
+<a href="http://ppizarror.com">Pablo Pizarro R.</a>, 2017.
 
 Agradecimientos a Felipe Ochoa.

@@ -1,8 +1,13 @@
-# Espectro respuesta
-[![@ppizarror](http://ppizarror.com/resources/images/autor.svg)](http://ppizarror.com)
-[![Licencia GPL](http://ppizarror.com/resources/images/licenciagpl2.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+<h1 align="center">
+  <img alt="Espectro respuesta" src="http://ppizarror.com/resources/other/matlab.png" width="200px" height="200px" />
+  <br /><br />
+  Espectro respuesta</h1>
+<p align="center">Calcula el espectro de respuesta a partir de un registro de aceleración</p>
+<div align="center"><a href="http://ppizarror.com"><img alt="@ppizarror" src="http://ppizarror.com/badges/autor.svg" /></a>
+<a href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.html"><img alt="GPL V2.0" src="http://ppizarror.com/badges/licenciagpl2.svg" /></a>
+</div><br />
 
-Código en Matlab que calcula el espectro de respuesta a partir de un registro de aceleraciones.
+Código en Matlab que calcula el espectro de respuesta a partir de un registro de aceleraciones
 
 ## Modo de uso
 ```matlab
@@ -26,7 +31,9 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | Sa | Vector de aceleración |
 | T | Vector período |
 | b | Amortiguamiento |
+    
+## Licencia
+Este proyecto está licenciado bajo GPLv2 [https://www.gnu.org/licenses/gpl-2.0.html]
 
 ## Autor
-<a href="http://ppizarror.com">Pablo Pizarro R.</a> | 2017.<br>
-Agradecimientos a Felipe Ochoa.
+<a href="http://ppizarror.com" title="ppizarror">Pablo Pizarro R.</a> | 2017

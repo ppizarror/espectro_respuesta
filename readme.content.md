@@ -12,11 +12,13 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | acc | Vector de aceleraciones (cm*s^2) |
 | Fs | Número de muestras por segundo |
 | beta | Razón de amortiguamiento |
-| plot | Indica si grafica o no (booleano) |
+| plot | Indica si grafica o no (```false``` por defecto) |
 | figid | Número de la figura |
 | plottitle | Título del plot |
 | plotcolor | Color de la línea (```'k'``` por defecto) |
 | showlegend | Muestra la leyenda (```false``` por defecto)|
+| dohold | hold en cada gráfico (```true``` por defecto)|
+| dogrid | grid en cada grafico (```true``` por defecto)|
 
 **Salida**:
 

@@ -2,7 +2,7 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 
 ## Modo de uso
 ```matlab
-[Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, plottitle, plotcolor, figid, showlegend)
+[Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
 ```
 
 **Entrada**:
@@ -13,10 +13,10 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | Fs | Número de muestras por segundo |
 | beta | Razón de amortiguamiento |
 | plot | Indica si grafica o no (booleano) |
+| figid | Número de la figura |
 | plottitle | Título del plot |
 | plotcolor | Color de la línea (```'k'``` por defecto) |
-| figid | Número de la figura |
-| showlegend | Muestra la leyenda |
+| showlegend | Muestra la leyenda (```false``` por defecto)|
 
 **Salida**:
 

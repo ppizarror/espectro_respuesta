@@ -1,4 +1,9 @@
-function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, plottitle, plotcolor, figid, showlegend)
+function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
+%
 % Crea el espectro de respuesta a partir de un registro de aceleraciones.
 %
 % Input:
@@ -10,6 +15,8 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, plottitl
 %   plotcolor:  Color de la línea
 %   figid:      Número de la figura
 %   showlegend: Muestra la leyenda
+%   dohold:     Muestra la leyenda
+%   dogrid:     Muestra la leyenda
 %
 % Output:
 %   Sd:         Vector desplazamiento
@@ -17,11 +24,27 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, plottitl
 %   Sa:         Vector de aceleración
 %   T:          Vector de período
 %   TTT:        Tiempo asociado a la máxima aceleración
+%
+% This program is free software; you can redistribute it and/or
+% modify it under the terms of the GNU General Public License
+% as published by the Free Software Foundation; either version 2
+% of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 %% Si no se define plot
 if ~exist('plot', 'var'), plot = false; end
 if ~exist('plotcolor', 'var'), plotcolor = 'k-'; end
 if ~exist('showlegend', 'var'), showlegend = 'k-'; end
+if ~exist('dohold', 'var'), dohold = true; end
+if ~exist('dogrid', 'var'), dogrid = true; end
 
 %% Se aplica corrección de linea base a la señal
 acc = detrend(acc);
@@ -74,30 +97,53 @@ if plot
     if showlegend
         legend(gca, 'show');
     end
-    grid on;
+    if dohold
+        hold on;
+    else
+        hold off;
+    end
+    if dogrid
+        grid on;
+    else
+        grid off;
+    end
     title(plottitle);
     ylabel('$S_D (cm)$', 'Interpreter', 'latex');
     xlabel('Periodo $(s)$', 'Interpreter', 'latex');
     subplot(3, 1, 2);
     semilogx(T, Sv, plotcolor);
-    grid on;
+    if dohold
+        hold on;
+    else
+        hold off;
+    end
+    if dogrid
+        grid on;
+    else
+        grid off;
+    end
     ylabel('$S_V (cm/s)$', 'Interpreter', 'latex');
     xlabel('Periodo $(s)$', 'Interpreter', 'latex');
     subplot(3, 1, 3);
     semilogx(T, Sa./980, plotcolor);
-    grid on;
+    if dohold
+        hold on;
+    else
+        hold off;
+    end
+    if dogrid
+        grid on;
+    else
+        grid off;
+    end
     ylabel('$S_A (g)$', 'Interpreter', 'latex');
     xlabel('Periodo $(s)$', 'Interpreter', 'latex');
 end
 
 function [t] = max_t(columna, Fs)
-% Retorna el tiempo asociado a la máxima aceleración calculada por el
-% oscilador para un tiempo y una razón de amortiguamiento.
-
 m = size(columna);
 a = 0;
 for i = 1:m
-    % Almacena la máxima aceleración y guarda el tiempo asociado
     if abs(a) < abs(columna(i))
         a = abs(columna(i));
         t = i / Fs;
@@ -124,6 +170,20 @@ function [x, v, a] = respcacr(m, T, b, P, Fs, xo, vo)
 %   Fs:     Frecuencia muestreo en registro aceleracion
 %   xo:     Desplazamiento inicial
 %   vo:     Velocidad inicial
+%
+% This program is free software; you can redistribute it and/or
+% modify it under the terms of the GNU General Public License
+% as published by the Free Software Foundation; either version 2
+% of the License, or (at your option) any later version.
+%
+% This program is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with this program; if not, write to the Free Software
+% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 %% Se crea la ecuación de un oscilador armónico de 1 grado de libertad
 np = length(P);

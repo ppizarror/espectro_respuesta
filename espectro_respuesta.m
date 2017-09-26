@@ -41,6 +41,7 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 
 %% Si no se define plot
 if ~exist('plot', 'var'), plot = false; end
+if ~exist('plottitle', 'var'), plottitle = ''; end
 if ~exist('plotcolor', 'var'), plotcolor = 'k-'; end
 if ~exist('showlegend', 'var'), showlegend = false; end
 if ~exist('dohold', 'var'), dohold = true; end

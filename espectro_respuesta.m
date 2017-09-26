@@ -1,8 +1,9 @@
 function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
 %
 % Crea el espectro de respuesta a partir de un registro de aceleraciones.
 %
@@ -25,19 +26,22 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 %   T:          Vector de período
 %   TTT:        Tiempo asociado a la máxima aceleración
 %
-% This program is free software; you can redistribute it and/or
-% modify it under the terms of the GNU General Public License
-% as published by the Free Software Foundation; either version 2
-% of the License, or (at your option) any later version.
+% Autor: Pablo Pizarro R. @ ppizarror.com
+% Versión: 2.2 (26/09/2017)
+% Licencia: GPLv2
+%	This program is free software; you can redistribute it and/or
+%	modify it under the terms of the GNU General Public License
+%	as published by the Free Software Foundation; either version 2
+%	of the License, or (at your option) any later version.
+%	
+% 	This program is distributed in the hope that it will be useful,
+% 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+% 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% 	GNU General Public License for more details.
 %
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program; if not, write to the Free Software
-% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+% 	You should have received a copy of the GNU General Public License
+% 	along with this program; if not, write to the Free Software
+% 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 %% Si no se define plot
 if ~exist('plot', 'var'), plot = false; end
@@ -152,18 +156,12 @@ for i = 1:m
 end
 
 function [x, v, a] = respcacr(m, T, b, P, Fs, xo, vo)
-% [x,v,a] = respcacr(m,T,b,P,Fs,xo,vo)
-% [x,v,a] = respcacr([-]m,k,c,P,Fs,xo,vo)
-%
 % Genera respuesta de un oscilador linear estable paso a paso
 % método de aceleracion constante. SUPONE 1 GDL.
-
 % Metodo incondicionalmente estable autoiniciante. Por precisión
 % se recomienda que Fs > 10/T. OJO USA LTILR: ES MAS RÁPIDO
 %
-% Con propiedades b y w, a una señal de excitación P.
-%
-% Parametros de entrada
+% Input
 %   m:      Masa del sistema
 %   T:      Período no amortiguado del oscilador sec
 %   b:      Razón amortigumiento critico
@@ -172,19 +170,10 @@ function [x, v, a] = respcacr(m, T, b, P, Fs, xo, vo)
 %   xo:     Desplazamiento inicial
 %   vo:     Velocidad inicial
 %
-% This program is free software; you can redistribute it and/or
-% modify it under the terms of the GNU General Public License
-% as published by the Free Software Foundation; either version 2
-% of the License, or (at your option) any later version.
-%
-% This program is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%
-% You should have received a copy of the GNU General Public License
-% along with this program; if not, write to the Free Software
-% Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
+% Output
+%	x:		Vector desplazamiento
+%	v:		Vector velocidad
+%	a:		Vector de aceleración
 
 %% Se crea la ecuación de un oscilador armónico de 1 grado de libertad
 np = length(P);

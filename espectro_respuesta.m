@@ -4,6 +4,7 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
+% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor, showlegend, dohold, dogrid, plotlegend)
 %
 % Crea el espectro de respuesta a partir de un registro de aceleraciones.
 %

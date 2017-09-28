@@ -1,4 +1,4 @@
-function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
+function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid, plotlegend)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true)
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle)
@@ -6,6 +6,23 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 % [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
 %
 % Crea el espectro de respuesta a partir de un registro de aceleraciones.
+%
+% Autor: Pablo Pizarro R. @ ppizarror.com
+% Versión: 2.3 (27/09/2017)
+% Licencia: GPLv2
+%	This program is free software; you can redistribute it and/or
+%	modify it under the terms of the GNU General Public License
+%	as published by the Free Software Foundation; either version 2
+%	of the License, or (at your option) any later version.
+%
+% 	This program is distributed in the hope that it will be useful,
+% 	but WITHOUT ANY WARRANTY; without even the implied warranty of
+% 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% 	GNU General Public License for more details.
+%
+% 	You should have received a copy of the GNU General Public License
+% 	along with this program; if not, write to the Free Software
+% 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 %
 % Input:
 %   acc:        Vector de aceleraciones en cm*s^2
@@ -18,6 +35,7 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 %   showlegend: Muestra la leyenda
 %   dohold:     Muestra la leyenda
 %   dogrid:     Muestra la leyenda
+%   plotlegend: Leyenda del plot, por defecto se escribe el valor de beta
 %
 % Output:
 %   Sd:         Vector desplazamiento
@@ -25,23 +43,6 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 %   Sa:         Vector de aceleración
 %   T:          Vector de período
 %   TTT:        Tiempo asociado a la máxima aceleración
-%
-% Autor: Pablo Pizarro R. @ ppizarror.com
-% Versión: 2.2 (26/09/2017)
-% Licencia: GPLv2
-%	This program is free software; you can redistribute it and/or
-%	modify it under the terms of the GNU General Public License
-%	as published by the Free Software Foundation; either version 2
-%	of the License, or (at your option) any later version.
-%	
-% 	This program is distributed in the hope that it will be useful,
-% 	but WITHOUT ANY WARRANTY; without even the implied warranty of
-% 	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% 	GNU General Public License for more details.
-%
-% 	You should have received a copy of the GNU General Public License
-% 	along with this program; if not, write to the Free Software
-% 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
 
 %% Si no se define plot
 if ~exist('plot', 'var'), plot = false; end
@@ -50,6 +51,7 @@ if ~exist('plotcolor', 'var'), plotcolor = 'k-'; end
 if ~exist('showlegend', 'var'), showlegend = false; end
 if ~exist('dohold', 'var'), dohold = true; end
 if ~exist('dogrid', 'var'), dogrid = true; end
+if ~exist('plotlegend', 'var'), plotlegend = ''; end
 
 %% Se aplica corrección de linea base a la señal
 acc = detrend(acc);
@@ -98,8 +100,12 @@ if plot
     set(gcf, 'name', plottitle);
     movegui(fig, 'center');
     subplot(3, 1, 1);
-    semilogx(T, Sd, plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
-    if showlegend
+    if plotlegend ~= ''
+        semilogx(T, Sd, plotcolor, 'DisplayName', plotlegend);
+    else
+        semilogx(T, Sd, plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
+    end
+    if showlegend && plotlegend ~= ''
         legend(gca, 'show');
     end
     if dohold

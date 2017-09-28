@@ -9,7 +9,7 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 % Crea el espectro de respuesta a partir de un registro de aceleraciones.
 %
 % Autor: Pablo Pizarro R. @ ppizarror.com
-% Versión: 2.3 (27/09/2017)
+% Versión: 2.4 (27/09/2017)
 % Licencia: GPLv2
 %	This program is free software; you can redistribute it and/or
 %	modify it under the terms of the GNU General Public License
@@ -101,12 +101,12 @@ if plot
     set(gcf, 'name', plottitle);
     movegui(fig, 'center');
     subplot(3, 1, 1);
-    if plotlegend ~= ''
+    if ~strcmp(plotlegend, '')
         semilogx(T, Sd, plotcolor, 'DisplayName', plotlegend);
     else
         semilogx(T, Sd, plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
     end
-    if showlegend && plotlegend ~= ''
+    if showlegend && ~strcmp(plotlegend, '')
         legend(gca, 'show');
     end
     if dohold

@@ -19,6 +19,7 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | showlegend | Muestra la leyenda (```false``` por defecto)|
 | dohold | hold en cada gráfico (```true``` por defecto)|
 | dogrid | grid en cada grafico (```true``` por defecto)|
+| plotlegend | Leyenda del gráfico (por defecto se escribe el valor de beta)|
 
 **Salida**:
 

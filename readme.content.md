@@ -1,6 +1,7 @@
 Código en Matlab que calcula el espectro de respuesta a partir de un registro de aceleraciones.
 
 ## Modo de uso
+
 ```matlab
 [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
 ```
@@ -31,4 +32,5 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | TTT | Tiempo asociado a la máxima aceleración |
     
 ## Licencia
+
 Este proyecto está licenciado bajo GPLv2 [https://www.gnu.org/licenses/gpl-2.0.html]

@@ -12,7 +12,7 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 ## Modo de uso
 
 ```matlab
-[Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
+[Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta)
 ```
 
 **Entrada**:

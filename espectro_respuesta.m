@@ -1,15 +1,39 @@
-function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, plottitle, plotcolor, showlegend, dohold, dogrid, plotlegend)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor, showlegend, dohold, dogrid)
-% [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, true, figid, plottitle, plotcolor, showlegend, dohold, dogrid, plotlegend)
-%
+function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, varargin)
 % Crea el espectro de respuesta a partir de un registro de aceleraciones.
 %
+% Input:
+%   acc:            Vector de aceleraciones en cm*s^2
+%   Fs:             Numero de muestras por segundo
+%   beta:           Razon de amortiguamiento
+%
+% Parametros opcionales:
+%   accdetrend      Aplica detrend al vector de entrada de aceleracion
+%   dogrid          Muestra la leyenda
+%   dohold          Muestra la leyenda
+%   dt              Delta de periodo (s)
+%   figid           Numero de la figura
+%   gcm2            Unidad de conversion entre (g) y (cm/s2)
+%   plot            Indica si grafica o no (booleano)
+%   plotcolor       Color de la linea
+%   plotlegend      Leyenda del plot, por defecto se escribe el valor de beta
+%   plottitle       Titulo del plot
+%   salabel         Etiqueta eje y aceleracion
+%   sdlabel         Etiqueta eje y desplazamiento
+%   showlegend      Muestra la leyenda
+%   svlabel         Etiqueta eje y velocidad
+%   tf              Periodo final de analisis (s)
+%   ti              Periodo inicial de analisis (s)
+%   xlabel          Etiqueta eje x periodo
+%
+% Output:
+%   Sd:             Vector desplazamiento (cm)
+%   Sv:             Vector de velocidad (cm/s)
+%   Sa:             Vector de aceleracion (cm/s2)
+%   T:              Vector de periodo (s)
+%   TTT:            Tiempo asociado a la maxima aceleracion
+%
 % Autor: Pablo Pizarro R. @ ppizarror.com
-% Versión: 2.5 (27/09/2017)
+% Version: 3.0 (22/11/2020)
 % Licencia: GPLv2
 %	This program is free software; you can redistribute it and/or
 %	modify it under the terms of the GNU General Public License
@@ -24,135 +48,143 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, plot, figid, p
 % 	You should have received a copy of the GNU General Public License
 % 	along with this program; if not, write to the Free Software
 % 	Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA
-%
-% Input:
-%   acc:        Vector de aceleraciones en cm*s^2
-%   Fs:         Número de muestras por segundo
-%   beta:       Razón de amortiguamiento
-%   plot:       Indica si grafica o no (booleano)
-%   plottitle:  Título del plot
-%   plotcolor:  Color de la línea
-%   figid:      Número de la figura
-%   showlegend: Muestra la leyenda
-%   dohold:     Muestra la leyenda
-%   dogrid:     Muestra la leyenda
-%   plotlegend: Leyenda del plot, por defecto se escribe el valor de beta
-%
-% Output:
-%   Sd:         Vector desplazamiento
-%   Sv:         Vector de velocidad
-%   Sa:         Vector de aceleración
-%   T:          Vector de período
-%   TTT:        Tiempo asociado a la máxima aceleración
 
-%% Si no se define plot
-if ~exist('plot', 'var'), plot = false; end
-if ~exist('plottitle', 'var'), plottitle = ''; end
-if ~exist('plotcolor', 'var'), plotcolor = 'k-'; end
-if ~exist('showlegend', 'var'), showlegend = false; end
-if ~exist('dohold', 'var'), dohold = true; end
-if ~exist('dogrid', 'var'), dogrid = true; end
-if ~exist('plotlegend', 'var'), plotlegend = ''; end
+% Recorre parametros opcionales
+p = inputParser;
+p.KeepUnmatched = true;
+addOptional(p, 'accdetrend', true);
+addOptional(p, 'dogrid', true);
+addOptional(p, 'dohold', true);
+addOptional(p, 'dt', 0.005);
+addOptional(p, 'figid', 0);
+addOptional(p, 'gcm2', 9.80665*100);
+addOptional(p, 'plot', false);
+addOptional(p, 'plotcolor', 'k-');
+addOptional(p, 'plotlegend', '');
+addOptional(p, 'plottitle', 'Espectro de respuesta');
+addOptional(p, 'salabel', '$S_A (g)$');
+addOptional(p, 'sdlabel', '$S_D (cm)$');
+addOptional(p, 'showlegend', true);
+addOptional(p, 'svlabel', '$S_V (cm/s)$');
+addOptional(p, 'tf', 10);
+addOptional(p, 'ti', 0.01);
+addOptional(p, 'xlabel', 'Periodo $(s)$');
+parse(p, varargin{:});
+r = p.Results;
 
-%% Se aplica corrección de linea base a la señal
-acc = detrend(acc);
+if ~isnumeric(Fs)
+    error('Fs debe ser un numero, no un vector');
+end
+if ~isnumeric(beta)
+    error('beta debe ser un numero, no un vector');
+end
 
-%% Crea arreglos de tiempo y razón de amortiguamiento
-dper = 0.01; % Delta de periodo
-T = 0.01:dper:10; % Vector de periodo
+%% Se aplica correccion de linea base
+if r.accdetrend
+    acc = detrend(acc);
+end
+
+%% Crea arreglos de tiempo y razon de amortiguamiento
+T = r.ti:r.dt:r.tf; % Vector de periodo
 
 %% Dimensiones
 nT = length(T);
 nb = length(beta);
 
-%% Inicialización de variables
+%% Inicializacion de variables
 Sd = zeros(nT, nb); % Vector de ceros para iniciar vectores de desplazamiento
-Sa = zeros(nT, nb); % Vector de ceros para iniciar vectores de aceleración
+Sa = zeros(nT, nb); % Vector de ceros para iniciar vectores de aceleracion
 Sv = zeros(nT, nb); % Vector de ceros para iniciar vectores de velocidad
-TTT = zeros(nT, nb); % Tiempos de máxima aceleración para cada combinación amortiguamiento-tiempo
+TTT = zeros(nT, nb); % Tiempos de maxima aceleracion para cada combinacion amortiguamiento-tiempo
 
-%% Se recorre cada combinación de amortiguamiento-periodo
+%% Se recorre cada combinacion de amortiguamiento-periodo
 for j = 1:nb
     for i = 1:nT
-        % Se obtiene desplazamiento, velocidad y aceleración
+        % Se obtiene desplazamiento, velocidad y aceleracion
         [xm, vm, am] = respcacr(1, T(i), beta(j), -acc, Fs, 0, 0);
         
-        % Se guarda el máximo desplazamiento
+        % Se guarda el maximo desplazamiento
         Sd(i, j) = max(abs(xm));
         
-        % Se guarda la máxima velocidad
+        % Se guarda la maxima velocidad
         Sv(i, j) = max(abs(vm));
         
-        % Se guarda la máxima aceleración, suma movimiento de la base
+        % Se guarda la maxima aceleracion, suma movimiento de la base
         Sa(i, j) = max(abs(am+acc));
         
-        % Tiempo asociado a la máxima aceleración
+        % Tiempo asociado a la maxima aceleracion
         TTT(i, j) = max_t(am, Fs);
     end
 end
 
 %% Grafica los resultados
-if plot
-    if ~exist('figid', 'var')
+if r.plot
+    r.figid = fix(r.figid); % Convierte a numero entero
+    if r.figid <= 0
         fig = figure();
     else
-        fig = figure(figid);
+        fig = figure(r.figid);
     end
-    set(gcf, 'name', plottitle);
+    set(gcf, 'name', r.plottitle);
     movegui(fig, 'center');
+    
+    % Grafica pseudoespectro de desplazamiento
     subplot(3, 1, 1);
-    if ~strcmp(plotlegend, '')
-        semilogx(T, Sd, plotcolor, 'DisplayName', plotlegend);
+    if ~strcmp(r.plotlegend, '')
+        semilogx(T, Sd, r.plotcolor, 'DisplayName', r.plotlegend);
     else
-        semilogx(T, Sd, plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
+        semilogx(T, Sd, r.plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
     end
-    if showlegend
+    if r.showlegend
         legend(gca, 'show');
     end
-    if dohold
+    if r.dohold
         hold on;
     else
         hold off;
     end
-    if dogrid
+    if r.dogrid
         grid on;
     else
         grid off;
     end
-    title(plottitle);
-    ylabel('$S_D (cm)$', 'Interpreter', 'latex');
-    xlabel('Periodo $(s)$', 'Interpreter', 'latex');
+    title(r.plottitle);
+    ylabel(r.sdlabel, 'Interpreter', 'latex');
+    
+    % Grafica pseudoespectro de velocidad
     subplot(3, 1, 2);
-    semilogx(T, Sv, plotcolor);
-    if dohold
+    semilogx(T, Sv, r.plotcolor);
+    if r.dohold
         hold on;
     else
         hold off;
     end
-    if dogrid
+    if r.dogrid
         grid on;
     else
         grid off;
     end
-    ylabel('$S_V (cm/s)$', 'Interpreter', 'latex');
-    xlabel('Periodo $(s)$', 'Interpreter', 'latex');
+    ylabel(r.svlabel, 'Interpreter', 'latex');
+    
+    % Grafica pseudoespectro de aceleracion
     subplot(3, 1, 3);
-    semilogx(T, Sa./980, plotcolor);
-    if dohold
+    semilogx(T, Sa./r.gcm2, r.plotcolor);
+    if r.dohold
         hold on;
     else
         hold off;
     end
-    if dogrid
+    if r.dogrid
         grid on;
     else
         grid off;
     end
-    ylabel('$S_A (g)$', 'Interpreter', 'latex');
-    xlabel('Periodo $(s)$', 'Interpreter', 'latex');
+    ylabel(r.salabel, 'Interpreter', 'latex');
+    xlabel(r.xlabel, 'Interpreter', 'latex');
 end
 
 function [t] = max_t(columna, Fs)
+% max_t: Entrega la posicion del maximo
 m = size(columna);
 a = 0;
 for i = 1:m
@@ -163,16 +195,16 @@ for i = 1:m
 end
 
 function [x, v, a] = respcacr(m, T, b, P, Fs, xo, vo)
-% Genera respuesta de un oscilador linear estable paso a paso
-% método de aceleracion constante. SUPONE 1 GDL.
-% Metodo incondicionalmente estable autoiniciante. Por precisión
-% se recomienda que Fs > 10/T. OJO USA LTILR: ES MAS RÁPIDO
+% respcacr: Genera respuesta de un oscilador linear estable paso a paso
+% metodo de aceleracion constante. SUPONE 1 GDL.
+% Metodo incondicionalmente estable autoiniciante. Por precision
+% se recomienda que Fs > 10/T. OJO USA LTILR: ES MAS RAPIDO
 %
 % Input
 %   m:      Masa del sistema
-%   T:      Período no amortiguado del oscilador sec
-%   b:      Razón amortigumiento critico
-%   P:      Registro de excitación (-m*vg si es ac.)
+%   T:      Periodo no amortiguado del oscilador sec
+%   b:      Razon amortigumiento critico
+%   P:      Registro de excitacion (-m*vg si es ac.)
 %   Fs:     Frecuencia muestreo en registro aceleracion
 %   xo:     Desplazamiento inicial
 %   vo:     Velocidad inicial
@@ -180,9 +212,9 @@ function [x, v, a] = respcacr(m, T, b, P, Fs, xo, vo)
 % Output
 %	x:		Vector desplazamiento
 %	v:		Vector velocidad
-%	a:		Vector de aceleración
+%	a:		Vector de aceleracion
 
-%% Se crea la ecuación de un oscilador armónico de 1 grado de libertad
+%% Se crea la ecuacion de un oscilador armonico de 1 grado de libertad
 np = length(P);
 dt = 1 / Fs;
 dt2 = dt * dt;
@@ -196,14 +228,14 @@ else
     m = abs(m);
 end
 
-% Ecuación de rigidez, k*
+% Ecuacion de rigidez, k*
 kk = (4 * m) / dt2 + 2 / dt * c + k;
 
 % Calcula la inversa
 ikk = inv(kk);
 
-ao = (P(1) - c * vo - k * xo) / m; % Expresión de fuerza
-P = [P(2:np); P(np)]; % Elimina el primer elemento y repite el último
+ao = (P(1) - c * vo - k * xo) / m; % Expresion de fuerza
+P = [P(2:np); P(np)]; % Elimina el primer elemento y repite el ultimo
 
 dt24 = 4 / dt2;
 km = ikk * m; %#ok<*MINV>

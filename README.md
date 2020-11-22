@@ -22,14 +22,26 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | acc | Vector de aceleraciones (cm*s^2) |
 | Fs | Número de muestras por segundo |
 | beta | Razón de amortiguamiento |
-| plot | Indica si grafica o no (```false``` por defecto) |
+
+**Parámetros opcionales**
+
+| accdetrend | Aplica detrend a la señal de entrada (```true``` por defecto) |
+| dogrid | grid en cada grafico (```true``` por defecto) |
+| dohold | hold en cada gráfico (```true``` por defecto) |
+| dt | Delta de período (```0.005 s``` por defecto) |
 | figid | Número de la figura |
-| plottitle | Título del plot |
+| gcm2 | Factor de conversión entre cm2 y g para graficar la aceleración |
+| plot | Indica si grafica o no (```false``` por defecto) |
 | plotcolor | Color de la línea (```'k'``` por defecto) |
-| showlegend | Muestra la leyenda (```false``` por defecto)|
-| dohold | hold en cada gráfico (```true``` por defecto)|
-| dogrid | grid en cada grafico (```true``` por defecto)|
-| plotlegend | Leyenda del gráfico (por defecto se escribe el valor de beta)|
+| plotlegend | Leyenda del gráfico (por defecto se escribe el valor de beta) |
+| plottitle | Título del plot |
+| salabel | Etiqueta del pseudoespectro de aceleración en g |
+| sdlabel | Etiqueta del pseudoespectro de desplazamiento |
+| showlegend | Muestra la leyenda (```false``` por defecto) |
+| svlabel | Etiqueta del pseudoespectro de velocidad |
+| tf | Periodo final de analisis
+| ti | Periodo inicial de analisis
+| xlabel | Etiqueta eje x de periodo |
 
 **Salida**:
 

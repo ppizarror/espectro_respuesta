@@ -16,6 +16,7 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, varargin)
 %   plot            Indica si grafica o no (booleano)
 %   plotcolor       Color de la linea
 %   plotlegend      Leyenda del plot, por defecto se escribe el valor de beta
+%   plotlog         Grafica en log eje x
 %   plottitle       Titulo del plot
 %   salabel         Etiqueta eje y aceleracion
 %   sdlabel         Etiqueta eje y desplazamiento
@@ -31,6 +32,14 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, varargin)
 %   Sa:             Vector de aceleracion (cm/s2)
 %   T:              Vector de periodo (s)
 %   TTT:            Tiempo asociado a la maxima aceleracion
+%
+% Ejemplo de uso:
+%   1) [Sd, Sv, Sa, T, ~] = espectro_respuesta(data, fs, 0.05, 'plot', true, ...
+%       'figid', 1, 'plotcolor', 'r');
+%   2) espectro_respuesta(data, fs, 0.05, 'plot', true);
+%   3) [Sd, Sv, Sa, T, TTT] = espectro_respuesta(data, fs, 0.05);
+%   4) [Sd, Sv, Sa, ~] = espectro_respuesta(data, fs, 0.05, 'plot', true);
+%   5) espectro_respuesta(data, fs, 0.02, 'plot', true, 'plotlog', false);
 %
 % Autor: Pablo Pizarro R. @ ppizarror.com
 % Version: 3.0 (22/11/2020)
@@ -61,6 +70,7 @@ addOptional(p, 'gcm2', 9.80665*100);
 addOptional(p, 'plot', false);
 addOptional(p, 'plotcolor', 'k-');
 addOptional(p, 'plotlegend', '');
+addOptional(p, 'plotlog', true);
 addOptional(p, 'plottitle', 'Espectro de respuesta');
 addOptional(p, 'salabel', '$S_A (g)$');
 addOptional(p, 'sdlabel', '$S_D (cm)$');
@@ -131,9 +141,17 @@ if r.plot
     % Grafica pseudoespectro de desplazamiento
     subplot(3, 1, 1);
     if ~strcmp(r.plotlegend, '')
-        semilogx(T, Sd, r.plotcolor, 'DisplayName', r.plotlegend);
+        if r.plotlog
+            semilogx(T, Sd, r.plotcolor, 'DisplayName', r.plotlegend);
+        else
+            plot(T, Sd, r.plotcolor, 'DisplayName', r.plotlegend);
+        end
     else
-        semilogx(T, Sd, r.plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
+        if r.plotlog
+            semilogx(T, Sd, r.plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
+        else
+            plot(T, Sd, r.plotcolor, 'DisplayName', strcat('\beta=', num2str(beta)));
+        end
     end
     if r.showlegend
         legend(gca, 'show');
@@ -153,7 +171,11 @@ if r.plot
     
     % Grafica pseudoespectro de velocidad
     subplot(3, 1, 2);
-    semilogx(T, Sv, r.plotcolor);
+    if r.plotlog
+        semilogx(T, Sv, r.plotcolor);
+    else
+        plot(T, Sv, r.plotcolor);
+    end
     if r.dohold
         hold on;
     else
@@ -168,7 +190,11 @@ if r.plot
     
     % Grafica pseudoespectro de aceleracion
     subplot(3, 1, 3);
-    semilogx(T, Sa./r.gcm2, r.plotcolor);
+    if r.plotlog
+        semilogx(T, Sa./r.gcm2, r.plotcolor);
+    else
+        plot(T, Sa./r.gcm2, r.plotcolor);
+    end
     if r.dohold
         hold on;
     else

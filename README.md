@@ -36,6 +36,7 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | plot | Indica si grafica o no (```false``` por defecto) |
 | plotcolor | Color de la línea (```'k'``` por defecto) |
 | plotlegend | Leyenda del gráfico (por defecto se escribe el valor de beta) |
+| plotlog | Grafica en logratimo en el eje x |
 | plottitle | Título del plot |
 | salabel | Etiqueta del pseudoespectro de aceleración en g |
 | sdlabel | Etiqueta del pseudoespectro de desplazamiento |

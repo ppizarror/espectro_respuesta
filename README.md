@@ -25,6 +25,8 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 
 **Parámetros opcionales**
 
+| Variable | Descripción |
+| :-: | :--|
 | accdetrend | Aplica detrend a la señal de entrada (```true``` por defecto) |
 | dogrid | grid en cada grafico (```true``` por defecto) |
 | dohold | hold en cada gráfico (```true``` por defecto) |

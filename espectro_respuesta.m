@@ -61,7 +61,7 @@ function [Sd, Sv, Sa, T, TTT] = espectro_respuesta(acc, Fs, beta, varargin)
 % Recorre parametros opcionales
 p = inputParser;
 p.KeepUnmatched = true;
-addOptional(p, 'accdetrend', true);
+addOptional(p, 'accdetrend', false);
 addOptional(p, 'dogrid', true);
 addOptional(p, 'dohold', true);
 addOptional(p, 'dt', 0.005);
@@ -90,6 +90,7 @@ if ~isnumeric(beta)
 end
 
 %% Se aplica correccion de linea base
+acc = real(acc);
 if r.accdetrend
     acc = detrend(acc);
 end
@@ -99,32 +100,29 @@ T = r.ti:r.dt:r.tf; % Vector de periodo
 
 %% Dimensiones
 nT = length(T);
-nb = length(beta);
 
 %% Inicializacion de variables
-Sd = zeros(nT, nb); % Vector de ceros para iniciar vectores de desplazamiento
-Sa = zeros(nT, nb); % Vector de ceros para iniciar vectores de aceleracion
-Sv = zeros(nT, nb); % Vector de ceros para iniciar vectores de velocidad
-TTT = zeros(nT, nb); % Tiempos de maxima aceleracion para cada combinacion amortiguamiento-tiempo
+Sd = zeros(nT, 1); % Vector de ceros para iniciar vectores de desplazamiento
+Sa = zeros(nT, 1); % Vector de ceros para iniciar vectores de aceleracion
+Sv = zeros(nT, 1); % Vector de ceros para iniciar vectores de velocidad
+TTT = zeros(nT, 1); % Tiempos de maxima aceleracion para cada combinacion amortiguamiento-tiempo
 
 %% Se recorre cada combinacion de amortiguamiento-periodo
-for j = 1:nb
-    for i = 1:nT
-        % Se obtiene desplazamiento, velocidad y aceleracion
-        [xm, vm, am] = respcacr(1, T(i), beta(j), -acc, Fs, 0, 0);
-        
-        % Se guarda el maximo desplazamiento
-        Sd(i, j) = max(abs(xm));
-        
-        % Se guarda la maxima velocidad
-        Sv(i, j) = max(abs(vm));
-        
-        % Se guarda la maxima aceleracion, suma movimiento de la base
-        Sa(i, j) = max(abs(am+acc));
-        
-        % Tiempo asociado a la maxima aceleracion
-        TTT(i, j) = max_t(am, Fs);
-    end
+for i = 1:nT
+    % Se obtiene desplazamiento, velocidad y aceleracion
+    [xm, vm, am] = respcacr(1, T(i), beta, -acc, Fs, 0, 0);
+
+    % Se guarda el maximo desplazamiento
+    Sd(i) = max(abs(xm));
+
+    % Se guarda la maxima velocidad
+    Sv(i) = max(abs(vm));
+
+    % Se guarda la maxima aceleracion, suma movimiento de la base
+    Sa(i) = max(abs(am+acc));
+
+    % Tiempo asociado a la maxima aceleracion
+    TTT(i) = max_t(am, Fs);
 end
 
 %% Grafica los resultados

@@ -23,7 +23,7 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | Fs | Número de muestras por segundo |
 | beta | Razón de amortiguamiento |
 
-**Parámetros opcionales**
+**Parámetros opcionales**:
 
 | Variable | Descripción |
 | :-: | :--|
@@ -54,11 +54,11 @@ Código en Matlab que calcula el espectro de respuesta a partir de un registro d
 | Sv | Vector de velocidad |
 | Sa | Vector de aceleración |
 | TTT | Tiempo asociado a la máxima aceleración |
-    
+
 ## Licencia
 
 Este proyecto está licenciado bajo GPLv2 [https://www.gnu.org/licenses/gpl-2.0.html]
 
-
 ## Autor
-<a href="https://ppizarror.com" title="ppizarror">Pablo Pizarro R.</a> | 2017 - 2020
+
+[Pablo Pizarro R.](https://ppizarror.com) | 2017 - 2020
